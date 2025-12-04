@@ -114,10 +114,16 @@ namespace EventManagementSystem.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("CertificateNumber");
 
+                    b.Property<int>("DownloadCount")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("EventScheduleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("GeneratedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastDownloadedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PdfPath")
@@ -142,6 +148,36 @@ namespace EventManagementSystem.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Certificates", (string)null);
+                });
+
+            modelBuilder.Entity("EventManagementSystem.Models.Entities.EventParticipant", b =>
+                {
+                    b.Property<Guid>("EventParticipantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("EventParticipantId")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<Guid>("EventScheduleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("RegisteredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EventParticipantId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("EventScheduleId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("EventParticipants", (string)null);
                 });
 
             modelBuilder.Entity("EventManagementSystem.Models.Entities.EventSchedule", b =>
@@ -185,6 +221,14 @@ namespace EventManagementSystem.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tags")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Tags");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -223,6 +267,9 @@ namespace EventManagementSystem.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasColumnName("Email");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -253,21 +300,35 @@ namespace EventManagementSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e5c6cf9f-90f7-4ccc-899a-a669d3c034e0"),
-                            CreatedAt = new DateTime(2025, 12, 2, 11, 1, 43, 386, DateTimeKind.Utc).AddTicks(6238),
-                            Email = "admin@example.com",
-                            Name = "Admin User",
-                            UpdatedAt = new DateTime(2025, 12, 2, 11, 1, 43, 386, DateTimeKind.Utc).AddTicks(6239),
+                            Id = new Guid("7e08e42b-441d-4f58-8b26-aae415e3bbca"),
+                            CreatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(42),
+                            Email = "admin@eventms.com",
+                            IsActive = true,
+                            Name = "System Administrator",
+                            UpdatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(43),
                             UserType = 0
                         },
                         new
                         {
-                            Id = new Guid("b9c565ac-8c34-400b-a17f-6f1b475e7753"),
-                            CreatedAt = new DateTime(2025, 12, 2, 11, 1, 43, 386, DateTimeKind.Utc).AddTicks(6274),
-                            Email = "speaker@example.com",
-                            Name = "John Speaker",
-                            UpdatedAt = new DateTime(2025, 12, 2, 11, 1, 43, 386, DateTimeKind.Utc).AddTicks(6275),
+                            Id = new Guid("a4ab86d3-458e-4856-a638-ef3c7e1b9fae"),
+                            CreatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(72),
+                            Email = "john.speaker@eventms.com",
+                            IsActive = true,
+                            Name = "John Doe",
+                            Phone = "+1234567890",
+                            UpdatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(72),
                             UserType = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("1c775abe-6641-4aad-848d-062a605e3c6f"),
+                            CreatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(99),
+                            Email = "jane.volunteer@eventms.com",
+                            IsActive = true,
+                            Name = "Jane Smith",
+                            Phone = "+0987654321",
+                            UpdatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(100),
+                            UserType = 1
                         });
                 });
 
@@ -423,6 +484,25 @@ namespace EventManagementSystem.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("EventManagementSystem.Models.Entities.EventParticipant", b =>
+                {
+                    b.HasOne("EventManagementSystem.Models.Entities.EventSchedule", "EventSchedule")
+                        .WithMany("Participants")
+                        .HasForeignKey("EventScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventManagementSystem.Models.Entities.User", "User")
+                        .WithMany("EventParticipants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EventSchedule");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("EventManagementSystem.Models.Entities.EventSchedule", b =>
                 {
                     b.HasOne("EventManagementSystem.Models.Entities.User", "Speaker")
@@ -488,11 +568,15 @@ namespace EventManagementSystem.Migrations
             modelBuilder.Entity("EventManagementSystem.Models.Entities.EventSchedule", b =>
                 {
                     b.Navigation("Certificates");
+
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("EventManagementSystem.Models.Entities.User", b =>
                 {
                     b.Navigation("Certificates");
+
+                    b.Navigation("EventParticipants");
 
                     b.Navigation("EventsAsSpeaker");
                 });
