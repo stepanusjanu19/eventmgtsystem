@@ -44,15 +44,36 @@ namespace EventManagementSystem.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("EmailVerificationExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmailVerificationId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EmailVerifiedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsMfaEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("MfaSecret")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -300,34 +321,34 @@ namespace EventManagementSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7e08e42b-441d-4f58-8b26-aae415e3bbca"),
-                            CreatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(42),
+                            Id = new Guid("27f5c867-8989-4ae7-8b7b-e13a5d12af51"),
+                            CreatedAt = new DateTime(2025, 12, 6, 5, 52, 26, 883, DateTimeKind.Utc).AddTicks(4551),
                             Email = "admin@eventms.com",
                             IsActive = true,
                             Name = "System Administrator",
-                            UpdatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(43),
+                            UpdatedAt = new DateTime(2025, 12, 6, 5, 52, 26, 883, DateTimeKind.Utc).AddTicks(4552),
                             UserType = 0
                         },
                         new
                         {
-                            Id = new Guid("a4ab86d3-458e-4856-a638-ef3c7e1b9fae"),
-                            CreatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(72),
+                            Id = new Guid("0a0a96ec-2371-4cfb-8272-4b05c705fa1d"),
+                            CreatedAt = new DateTime(2025, 12, 6, 5, 52, 26, 883, DateTimeKind.Utc).AddTicks(4575),
                             Email = "john.speaker@eventms.com",
                             IsActive = true,
                             Name = "John Doe",
                             Phone = "+1234567890",
-                            UpdatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(72),
+                            UpdatedAt = new DateTime(2025, 12, 6, 5, 52, 26, 883, DateTimeKind.Utc).AddTicks(4575),
                             UserType = 2
                         },
                         new
                         {
-                            Id = new Guid("1c775abe-6641-4aad-848d-062a605e3c6f"),
-                            CreatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(99),
+                            Id = new Guid("c2a03d89-2c3e-4a15-a0e2-3ebd55fe013d"),
+                            CreatedAt = new DateTime(2025, 12, 6, 5, 52, 26, 883, DateTimeKind.Utc).AddTicks(4597),
                             Email = "jane.volunteer@eventms.com",
                             IsActive = true,
                             Name = "Jane Smith",
                             Phone = "+0987654321",
-                            UpdatedAt = new DateTime(2025, 12, 4, 9, 43, 29, 599, DateTimeKind.Utc).AddTicks(100),
+                            UpdatedAt = new DateTime(2025, 12, 6, 5, 52, 26, 883, DateTimeKind.Utc).AddTicks(4598),
                             UserType = 1
                         });
                 });
